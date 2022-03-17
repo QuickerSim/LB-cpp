@@ -1,0 +1,117 @@
+@startuml LB-cpp
+
+skinparam roundcorner 10
+
+skinparam class {
+	BackgroundColor LightGray
+   BorderColor Black
+}
+
+skinparam stereotypeCBackgroundColor Yellow
+skinparam StereotypeEBackgroundColor LightGreen
+
+class QuadTree {
+   - parent: QuadTree*
+   - nw: QuadTree*
+   - ne: QuadTree*
+   - sw: QuadTree*
+   - se: QuadTree*
+   - side: QTSide  
+   - deepness: QSSize
+   - refinment_mark: QSBool
+   - xmin: QSDouble
+   - xmax: QSDouble
+   - ymin: QSDouble
+   - ymax: QSDouble
+   - node: LBNode*
+
+   + QuadTree()
+   + ~QuadTree()
+   + QuadTree(QSInt, QSDouble, QSDouble, QSDouble, QSDouble, QSBool, QuadTree*, QSInt)
+   
+   + CreateChildrens(): void
+   + IsCrossed(std::vector<Point>): void 
+   + CreateTree(std::vector<Point>, int): void
+   + BalanceTree(std::vector<QuadTree*>&, int): void
+   + AddLeafs(std::vector<QuadTree*>&): void
+   
+   + NorthNeighbor(): QuadTree*
+   + EastNeighbor(): QuadTree*
+   + SouthNeighbor(): QuadTree*
+   + WestNeighbor(): QuadTree*
+   
+   + InitNode(): void
+}
+
+class LBNode {
+   - nx: QSSize
+   - ny: QSSize
+   - ng: QSSize
+   - omega: QSDouble
+   - u_ini: QSDouble
+   - v_ini: QSDouble
+   - f: std::vector< std::vector<std::vector<QSDouble>> >
+   - f_buf: std::vector< std::vector<std::vector<QSDouble>> >
+   - flag: std::vector<std::vector<QSInt>>
+   - u: std::vector<std::vector<QSDouble>>
+   - v: std::vector<std::vector<QSDouble>>
+   - rho: std::vector<std::vector<QSDouble>>
+   
+   + LBNode()
+   + LBNode(QSDouble, QSDouble, QSDouble, QSDouble)
+   + ~LBNode()
+   
+   + Init(QSSize, QSSize, QSSize, QSDouble, QSDouble, QSDouble): void
+   + InitWave(): void
+   + InitWaveZero(): void
+   
+   + Step(): void
+   
+   + Collision(QSSize, QSSize): void
+   + EmptyCollision(QSSize, QSSize): void
+   + ZouHe(QSSize, QSSize): void
+   + BounceBack(QSSize, QSSize): void
+   + Streaming(QSSize, QSSize): void
+   + Streamingf0(QSSize, QSSize): void
+   + Streamingf1(QSSize, QSSize): void
+   + Streamingf2(QSSize, QSSize): void
+   + Streamingf3(QSSize, QSSize): void
+   + Streamingf4(QSSize, QSSize): void
+   + Streamingf5(QSSize, QSSize): void
+   + Streamingf6(QSSize, QSSize): void
+   + Streamingf7(QSSize, QSSize): void
+   + Streamingf8(QSSize, QSSize): void
+   + GhostInfo(QSSize, QSSize): void
+   + InterpolateUp(QSSize, QSSize): void
+   + InterpolateDown(QSSize, QSSize): void
+
+   + ComputeDensity(QSSize, QSSize): void
+   + ComputeVelocity(QSSize, QSSize): void
+}
+
+class Point {
+   + x: QSDouble
+   + y: QSDouble
+}
+
+enum QTSide {
+   NW
+   NE
+   SW
+   SE
+}
+
+enum LBNodeType {
+   INTERIOR
+   WALLBB
+   OUTFLOW
+   INLETZUOHE
+   GHOSTDEFAULT
+   GHOSTIUP
+   GHOSTIDOWN
+}
+
+QuadTree *-- LBNode
+
+
+@enduml
